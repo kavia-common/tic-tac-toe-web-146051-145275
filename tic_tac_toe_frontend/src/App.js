@@ -31,6 +31,15 @@ function App() {
     setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
   };
 
+  // Render a human-friendly status line for the header
+  const headerStatus = (() => {
+    if (status === 'X_wins') return 'X wins!';
+    if (status === 'O_wins') return 'O wins!';
+    if (status === 'draw') return 'Draw';
+    // status includes current player info already for in-progress
+    return status;
+  })();
+
   return (
     <div className="App">
       <header className="App-header" style={{ padding: '24px' }}>
@@ -44,14 +53,14 @@ function App() {
 
         <h1 style={{ marginBottom: '8px' }}>Tic Tac Toe</h1>
         <p style={{ marginTop: 0, marginBottom: '20px', color: 'var(--text-secondary)' }}>
-          {`Mode: ${mode} — ${status}`}
+          {`Mode: ${mode} — ${headerStatus}`}
         </p>
 
         <Controls
           mode={mode}
           setMode={setMode}
           onNewGame={startNewGame}
-          status={status}
+          status={headerStatus}
         />
 
         <GameBoard
