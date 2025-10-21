@@ -20,25 +20,52 @@ function GameBoard({
 }) {
   const isWinningIndex = (idx) => Array.isArray(winningLine) && winningLine.includes(idx);
 
+  // Helper to derive aria-label for each cell
+  const getCellAriaLabel = (idx, value) => {
+    if (value) {
+      return `Cell ${idx + 1}, occupied by ${value}`;
+    }
+    if (gameOver) {
+      return `Cell ${idx + 1}, game over`;
+    }
+    return `Cell ${idx + 1}, empty, current player ${currentPlayer}`;
+    };
+
   return (
     <div
       className="ttt-board"
       role="grid"
       aria-label="Tic Tac Toe Board"
+      aria-rowcount={3}
+      aria-colcount={3}
     >
-      {board.map((value, idx) => (
-        <div role="gridcell" key={idx}>
-          <Cell
-            value={value}
-            onClick={() => onCellClick(idx)}
-            disabled={gameOver || Boolean(value)}
-            ariaLabel={`Cell ${idx + 1}, ${value ? `occupied by ${value}` : `current player ${currentPlayer}`}`}
-          />
-          {isWinningIndex(idx) ? (
-            <span aria-hidden="true" style={{ display: 'none' }}>win</span>
-          ) : null}
-        </div>
-      ))}
+      {board.map((value, idx) => {
+        const disabled = gameOver || Boolean(value);
+        const win = isWinningIndex(idx);
+        const className = win ? 'is-win' : '';
+        // Grid semantics
+        const row = Math.floor(idx / 3) + 1;
+        const col = (idx % 3) + 1;
+
+        return (
+          <div
+            role="gridcell"
+            aria-rowindex={row}
+            aria-colindex={col}
+            key={idx}
+            aria-selected={win ? true : undefined}
+          >
+            <Cell
+              value={value}
+              onClick={() => onCellClick(idx)}
+              disabled={disabled}
+              ariaLabel={getCellAriaLabel(idx, value)}
+              // pass highlight class down for styling
+              extraClassName={className}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }

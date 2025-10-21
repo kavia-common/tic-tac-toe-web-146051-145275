@@ -59,6 +59,7 @@ function App() {
           setMode={setMode}
           onNewGame={startNewGame}
           status={headerStatus}
+          gameOver={gameOver}
         />
 
         <GameBoard

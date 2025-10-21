@@ -8,15 +8,20 @@ import React from 'react';
  * @param {function} props.onClick - Click handler for the cell.
  * @param {boolean} props.disabled - Whether the cell is disabled.
  * @param {string} props.ariaLabel - Accessible label for screen readers.
+ * @param {string} [props.extraClassName] - Optional extra class (e.g., 'is-win') to visually highlight state.
  */
-function Cell({ value, onClick, disabled = false, ariaLabel = 'Cell' }) {
+function Cell({ value, onClick, disabled = false, ariaLabel = 'Cell', extraClassName = '' }) {
+  const classes = ['ttt-cell', extraClassName].filter(Boolean).join(' ');
+  const pressed = value ? true : false;
+
   return (
     <button
       type="button"
-      className="ttt-cell"
+      className={classes}
       onClick={onClick}
       disabled={disabled}
       aria-label={ariaLabel}
+      aria-pressed={pressed}
       data-testid="ttt-cell"
     >
       {value || ''}

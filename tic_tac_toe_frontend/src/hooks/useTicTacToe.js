@@ -174,6 +174,7 @@ export function useTicTacToe() {
     };
   }, [mode, board, currentPlayer, evaluateBoard]);
 
+  // Expose gameOver and winningLine for UI disabled states and highlighting
   return {
     board,
     currentPlayer,
