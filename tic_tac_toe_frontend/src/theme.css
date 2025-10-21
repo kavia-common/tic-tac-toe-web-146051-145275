@@ -1,0 +1,309 @@
+:root {
+  /* Ocean Professional Theme Variables */
+  --color-primary: #2563EB;   /* blue-600 */
+  --color-secondary: #F59E0B; /* amber-500 */
+  --color-success: #F59E0B;   /* using secondary for success accent */
+  --color-error: #EF4444;     /* red-500 */
+  --color-bg: #f9fafb;        /* gray-50 */
+  --color-surface: #ffffff;   /* white */
+  --color-text: #111827;      /* gray-900 */
+
+  /* Derived tokens */
+  --color-muted: #6b7280; /* gray-500 */
+  --border-color: rgba(17, 24, 39, 0.08); /* text-900 @ 8% */
+  --ring: rgba(37, 99, 235, 0.4);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 10px 24px rgba(0,0,0,0.12);
+
+  --transition-fast: 150ms ease;
+  --transition-base: 220ms ease;
+
+  /* Gradient: from blue-500/10 to gray-50 */
+  --gradient-soft: linear-gradient(180deg, rgba(59,130,246,0.10), #f9fafb);
+}
+
+/* Base layout */
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--gradient-soft);
+  color: var(--color-text);
+}
+
+.App {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+.App-header {
+  width: 100%;
+  max-width: 880px;
+  padding: 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Title and subtitle */
+.tui-title {
+  margin: 0 0 4px 0;
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.tui-subtitle {
+  margin: 0 0 16px 0;
+  color: var(--color-muted);
+  font-size: 14px;
+}
+
+/* Controls container */
+.ttt-controls {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  margin: 16px 0 20px 0;
+}
+
+.ttt-controls .ttt-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 8px 10px;
+  box-shadow: var(--shadow-sm);
+}
+
+.ttt-controls label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.ttt-controls select {
+  appearance: none;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: var(--color-bg);
+  color: var(--color-text);
+  transition: box-shadow var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.ttt-controls select:hover {
+  border-color: rgba(17,24,39,0.18);
+}
+
+.ttt-controls select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+/* Primary button */
+.btn, .btn-primary {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+}
+
+.btn:hover, .btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+  background-color: #1d4ed8; /* blue-700 */
+}
+
+.btn:active, .btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn:focus-visible, .btn-primary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring), var(--shadow-md);
+}
+
+/* Status banner */
+.ttt-status {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 2px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-sm);
+  font-weight: 600;
+}
+
+.ttt-status.is-playing {
+  border-color: rgba(37,99,235,0.25);
+  background: linear-gradient(180deg, rgba(37,99,235,0.06), #ffffff);
+}
+
+.ttt-status.is-win {
+  border-color: rgba(245,158,11,0.35);
+  background: linear-gradient(180deg, rgba(245,158,11,0.10), #ffffff);
+}
+
+.ttt-status.is-draw {
+  border-color: rgba(17,24,39,0.15);
+  background: linear-gradient(180deg, rgba(17,24,39,0.04), #ffffff);
+}
+
+/* Board container */
+.ttt-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 12px;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+  width: clamp(300px, 60vw, 420px);
+  box-sizing: border-box;
+}
+
+/* Grid cells: maintain square via aspect-ratio */
+.ttt-cell {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  min-width: 0; /* prevent overflow */
+  font-size: clamp(28px, 6vw, 34px);
+  font-weight: 800;
+  border: 1px solid var(--border-color);
+  background: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-base), transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+  user-select: none;
+}
+
+.ttt-cell:hover {
+  background: #eef2ff; /* subtle indigo/blue tint */
+  border-color: rgba(37,99,235,0.3);
+}
+
+.ttt-cell:active {
+  transform: scale(0.98);
+}
+
+.ttt-cell:focus-visible {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+.ttt-cell:disabled {
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+
+/* Winning cell highlight */
+.ttt-cell.is-win {
+  background: linear-gradient(180deg, rgba(245,158,11,0.12), #ffffff);
+  border-color: rgba(245,158,11,0.6);
+  box-shadow: 0 0 0 2px rgba(245,158,11,0.25) inset;
+}
+
+/* Theme toggle button (existing) */
+.theme-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  opacity: 0.95;
+}
+
+.theme-toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring), var(--shadow-md);
+}
+
+/* Responsive layout */
+@media (max-width: 480px) {
+  .ttt-controls {
+    grid-template-columns: 1fr;
+  }
+  .ttt-board {
+    width: clamp(270px, 88vw, 360px);
+    gap: 8px;
+    padding: 10px;
+  }
+  .theme-toggle {
+    top: 10px;
+    right: 10px;
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+}
+
+/* Ensure minimum practical cell size on very small screens */
+@media (max-width: 360px) {
+  .ttt-board {
+    width: 92vw;
+  }
+}
+
+/* Accessible focus utility for any interactive element */
+:where(button, [role="button"], select, a, input, textarea):focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+/* Dark theme (optional if App toggles data-theme) */
+[data-theme="dark"] {
+  --color-bg: #0f172a;       /* slate-900 */
+  --color-surface: #0b1220;  /* deep surface */
+  --color-text: #e5e7eb;     /* gray-200 */
+  --border-color: rgba(229,231,235,0.12);
+  --gradient-soft: linear-gradient(180deg, rgba(59,130,246,0.12), #0f172a);
+}
+
+[data-theme="dark"] .ttt-cell {
+  background: #111827;
+}
+
+[data-theme="dark"] .ttt-controls .ttt-mode {
+  background: #0b1220;
+}

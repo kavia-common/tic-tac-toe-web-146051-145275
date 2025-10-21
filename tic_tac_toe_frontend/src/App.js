@@ -51,10 +51,8 @@ function App() {
           {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
         </button>
 
-        <h1 style={{ marginBottom: '8px' }}>Tic Tac Toe</h1>
-        <p style={{ marginTop: 0, marginBottom: '20px', color: 'var(--text-secondary)' }}>
-          {`Mode: ${mode} — ${headerStatus}`}
-        </p>
+        <h1 className="tui-title">Tic Tac Toe</h1>
+        <p className="tui-subtitle">{`Mode: ${mode} — ${headerStatus}`}</p>
 
         <Controls
           mode={mode}
@@ -71,7 +69,7 @@ function App() {
           gameOver={gameOver}
         />
 
-        <div style={{ marginTop: '16px', color: 'var(--text-secondary)' }}>
+        <div className="tui-subtitle" style={{ marginTop: '16px' }}>
           Current theme: <strong>{theme}</strong>
         </div>
       </header>

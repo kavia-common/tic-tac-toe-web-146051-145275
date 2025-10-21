@@ -18,18 +18,6 @@ function Cell({ value, onClick, disabled = false, ariaLabel = 'Cell' }) {
       disabled={disabled}
       aria-label={ariaLabel}
       data-testid="ttt-cell"
-      style={{
-        width: '80px',
-        height: '80px',
-        fontSize: '28px',
-        fontWeight: '700',
-        border: '1px solid var(--border-color)',
-        backgroundColor: 'var(--bg-primary)',
-        color: 'var(--text-primary)',
-        cursor: disabled ? 'not-allowed' : 'pointer',
-        borderRadius: '8px',
-        transition: 'background-color 0.2s ease, transform 0.05s ease',
-      }}
     >
       {value || ''}
     </button>

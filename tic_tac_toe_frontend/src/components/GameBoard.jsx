@@ -25,15 +25,6 @@ function GameBoard({
       className="ttt-board"
       role="grid"
       aria-label="Tic Tac Toe Board"
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: '10px',
-        padding: '10px',
-        backgroundColor: 'var(--bg-secondary)',
-        borderRadius: '12px',
-        border: '1px solid var(--border-color)',
-      }}
     >
       {board.map((value, idx) => (
         <div role="gridcell" key={idx}>
@@ -44,14 +35,7 @@ function GameBoard({
             ariaLabel={`Cell ${idx + 1}, ${value ? `occupied by ${value}` : `current player ${currentPlayer}`}`}
           />
           {isWinningIndex(idx) ? (
-            <span
-              aria-hidden="true"
-              style={{
-                display: 'none',
-              }}
-            >
-              win
-            </span>
+            <span aria-hidden="true" style={{ display: 'none' }}>win</span>
           ) : null}
         </div>
       ))}
