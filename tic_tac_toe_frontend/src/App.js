@@ -1,10 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { useTicTacToe } from './hooks/useTicTacToe';
+import Controls from './components/Controls';
+import GameBoard from './components/GameBoard';
 
 // PUBLIC_INTERFACE
 function App() {
   const [theme, setTheme] = useState('light');
+
+  // game hook for state and handlers
+  const {
+    board,
+    currentPlayer,
+    mode,
+    status,
+    setMode,
+    startNewGame,
+    handleCellClick,
+    gameOver,
+    winningLine,
+  } = useTicTacToe();
 
   // Effect to apply theme to document element
   useEffect(() => {
@@ -13,34 +28,43 @@ function App() {
 
   // PUBLIC_INTERFACE
   const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
   };
 
   return (
     <div className="App">
-      <header className="App-header">
-        <button 
-          className="theme-toggle" 
+      <header className="App-header" style={{ padding: '24px' }}>
+        <button
+          className="theme-toggle"
           onClick={toggleTheme}
           aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
         >
           {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
         </button>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
+
+        <h1 style={{ marginBottom: '8px' }}>Tic Tac Toe</h1>
+        <p style={{ marginTop: 0, marginBottom: '20px', color: 'var(--text-secondary)' }}>
+          {`Mode: ${mode} — ${status}`}
         </p>
-        <p>
+
+        <Controls
+          mode={mode}
+          setMode={setMode}
+          onNewGame={startNewGame}
+          status={status}
+        />
+
+        <GameBoard
+          board={board}
+          onCellClick={handleCellClick}
+          currentPlayer={currentPlayer}
+          winningLine={winningLine}
+          gameOver={gameOver}
+        />
+
+        <div style={{ marginTop: '16px', color: 'var(--text-secondary)' }}>
           Current theme: <strong>{theme}</strong>
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        </div>
       </header>
     </div>
   );
