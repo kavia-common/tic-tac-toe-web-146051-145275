@@ -1,4 +1,5 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import getBestMove from '../ai/minimax';
 
 /**
  * PUBLIC_INTERFACE
@@ -20,6 +21,9 @@ export function useTicTacToe() {
   const [currentPlayer, setCurrentPlayer] = useState('X');
   const [mode, setMode] = useState('PVP'); // 'PVP' | 'AI'
   const [winningLine, setWinningLine] = useState(null); // [a,b,c] or null
+
+  // Track timeout to avoid overlapping AI moves on rapid updates
+  const aiTimeoutRef = useRef(null);
 
   // Compute winner and draw
   const evaluateBoard = useCallback((b) => {
@@ -75,6 +79,11 @@ export function useTicTacToe() {
     setBoard(fresh);
     setCurrentPlayer('X');
     setWinningLine(null);
+    // Clear any pending AI move when starting fresh
+    if (aiTimeoutRef.current) {
+      clearTimeout(aiTimeoutRef.current);
+      aiTimeoutRef.current = null;
+    }
   }, []);
 
   // PUBLIC_INTERFACE
@@ -105,6 +114,65 @@ export function useTicTacToe() {
     },
     [board, currentPlayer, evaluateBoard]
   );
+
+  // Auto-play AI move when in AI mode and it's AI's turn
+  useEffect(() => {
+    // Guard: only in AI mode and game still in progress
+    if (mode !== 'AI') return;
+    const { winner, isDraw } = evaluateBoard(board);
+    if (winner || isDraw) return;
+
+    // Decide which mark is AI. For simplicity, AI plays as 'O' (human starts as 'X')
+    const aiMark = 'O';
+    const humanMark = 'X';
+
+    if (currentPlayer !== aiMark) return;
+
+    // Avoid scheduling multiple timeouts
+    if (aiTimeoutRef.current) {
+      clearTimeout(aiTimeoutRef.current);
+      aiTimeoutRef.current = null;
+    }
+
+    aiTimeoutRef.current = setTimeout(() => {
+      // Re-check game state at the time of execution to avoid stale moves
+      const check = evaluateBoard(board);
+      if (check.winner || check.isDraw) {
+        aiTimeoutRef.current = null;
+        return;
+      }
+
+      const move = getBestMove(board, aiMark, humanMark);
+      if (move === null || board[move] !== null) {
+        aiTimeoutRef.current = null;
+        return;
+      }
+
+      const next = [...board];
+      next[move] = aiMark;
+      setBoard(next);
+
+      const post = evaluateBoard(next);
+      if (post.line) {
+        setWinningLine(post.line);
+      } else {
+        setWinningLine(null);
+      }
+
+      if (!post.winner && !post.isDraw) {
+        setCurrentPlayer(humanMark);
+      }
+      aiTimeoutRef.current = null;
+    }, 300);
+
+    // Cleanup on dependency changes/unmount
+    return () => {
+      if (aiTimeoutRef.current) {
+        clearTimeout(aiTimeoutRef.current);
+        aiTimeoutRef.current = null;
+      }
+    };
+  }, [mode, board, currentPlayer, evaluateBoard]);
 
   return {
     board,
