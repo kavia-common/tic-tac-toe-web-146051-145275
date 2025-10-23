@@ -1,82 +1,72 @@
-# Lightweight React Template for KAVIA
+# Tic Tac Toe – Ocean Professional
 
-This project provides a minimal React template with a clean, modern UI and minimal dependencies.
+A compliant, test-ready Tic Tac Toe web app with Friend and AI modes, Ocean Professional styling, state management via reducer, and GxP-aligned audit scaffolding.
 
-## Features
+## Quick Start
+- Install: npm install
+- Dev: npm start
+- Test: npm test
+- Build: npm run build
 
-- **Lightweight**: No heavy UI frameworks - uses only vanilla CSS and React
-- **Modern UI**: Clean, responsive design with KAVIA brand styling
-- **Fast**: Minimal dependencies for quick loading times
-- **Simple**: Easy to understand and modify
+## Environment Variables
+- REACT_APP_TEST=true enables the AuditPanel for test/development visibility. For production, omit or set to false.
 
-## Getting Started
+## Components
+- App: Theme toggle and layout shell.
+- GameController: Orchestrates state and actions using useReducer.
+- Board/Cell: Accessible grid with ARIA roles and keyboard support.
+- StatusBar: Shows turn/mode/result/errors.
+- Controls: Mode selector (Friend/AI), Start, Reset with mid-game change confirmation.
+- AuditPanel: Optional audit trail viewer (REACT_APP_TEST).
 
-In the project directory, you can run:
+## State and Actions
+- initialStateFactory: { board[9], currentPlayer 'X', result null, mode 'Friend', startedAt, endedAt null, lastActionAt, auditLog[], theme, error, userContext, aiThinking }.
+- Actions:
+  - START_GAME, MAKE_MOVE(index), AI_MOVE, SET_MODE('Friend'|'AI'), RESET, SET_THEME('light'|'dark'), ERROR_RAISED({message,metadata}).
+- Business rules:
+  - Friend: both players act on their turns.
+  - AI: Human is X only; AI acts as O; prevent player during AI turn.
+  - Prevent AI actions in Friend mode; prevent illegal/occupied moves; stop moves after result.
 
-### `npm start`
+## Rules and AI
+- rules.computeResult(board) → 'X' | 'O' | 'Draw' | null with WIN_LINES.
+- ai.chooseMove(state) picks center, then corners, then sides; returns -1 if none.
 
-Runs the app in development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Audit Strategy (GxP-aligned)
+- auditEventFactory(userContext, actor, actionType, before, after, metadata, reason) ⇒ {id, timestamp ISO, userId, ...}.
+- In-memory append via appendAudit.
+- Reducer logs an audit event for every state change.
+- Error handling: UI dispatches ERROR_RAISED with friendly message; technical details in metadata.
 
-### `npm test`
+UserContext: default userId 'anonymous-session' with role placeholders (player). Hook up real auth later.
 
-Launches the test runner in interactive watch mode.
+## Styling – Ocean Professional
+- Palette: primary #2563EB, secondary #F59E0B, background #f9fafb, surface #ffffff, text #111827, error #EF4444.
+- Rounded corners, subtle shadows, focus rings, transitions.
 
-### `npm run build`
+## Accessibility
+- ARIA roles on board/cells; keyboard navigation (Enter/Space).
+- status messages use aria-live=polite; errors use role=alert.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Testing
+- Unit tests: rules, reducer, AI, audit.
+- Integration tests: Friend and AI modes using React Testing Library.
+- Coverage target: >=80%.
 
-## Customization
+Run:
+- npm test
+- CI: tests are deterministic; AI delay mocked via fake timers.
 
-### Colors
+## GxP Compliance Summary
+- Data Integrity: Attributable (userId), Contemporaneous (ISO timestamps), Complete (before/after, metadata), Consistent (reducer rules).
+- Error Handling: try/catch in UI, ERROR_RAISED action; technical details recorded.
+- Access Controls: role placeholders and mode-based restrictions. Expand with real RBAC as needed.
+- Electronic Signature: out of scope for this demo; hook points available at action dispatchers.
 
-The main brand colors are defined as CSS variables in `src/App.css`:
+## Acceptance Criteria Mapping
+- Components and reducer: src/components/*, src/game/state.js
+- Rules and AI: src/game/rules.js, src/game/ai.js
+- Audit: src/game/audit.js integrated in reducer
+- Tests: src/game/__tests__/* and src/__tests__/*
+- Styles: src/App.css, src/index.css
 
-```css
-:root {
-  --kavia-orange: #E87A41;
-  --kavia-dark: #1A1A1A;
-  --text-color: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --border-color: rgba(255, 255, 255, 0.1);
-}
-```
-
-### Components
-
-This template uses pure HTML/CSS components instead of a UI framework. You can find component styles in `src/App.css`. 
-
-Common components include:
-- Buttons (`.btn`, `.btn-large`)
-- Container (`.container`)
-- Navigation (`.navbar`)
-- Typography (`.title`, `.subtitle`, `.description`)
-
-## Learn More
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
